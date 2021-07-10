@@ -14,7 +14,7 @@ endfunction
 augroup MyGroup
   autocmd!
   autocmd FileType writingPrompt.buffer nnoremap <buffer> o :call FeedvimOpenLink()<CR>
-  autocmd FileType writingPrompt.buffer setlocal noswapfile
+  autocmd FileType writingPrompt.buffer setlocal noswapfile wrap linebreak nornu nonu noruler
 augroup END
 
 function! s:get_title(url)

@@ -20,12 +20,12 @@ function! s:get_title(url)
   let i=0
   let title='no title'
 
-  while i < 10
+  while i < 25
     if dom['name'] == 'title'
       let title = dom['child'][0]
       break
     endif
-    let dom = dom['child'][1]
+    " let dom = dom['child'][1]
     let i += 1
   endwhile
 
@@ -40,32 +40,51 @@ function! FeedvimOpenBuffer()
   " change buffer
   let bufnum = bufnr('feed.vim.buffer')
   if bufnum == -1
-    enew
+    50vsplit 'feed.vim.buffer'
   else
-    execute bufnum.'buffer'
-    execute '%d'
+    50vsplit bufnum.'buffer'
   endif
 
   " set buffer parameter
-  set filetype=feed.vim.buffer
-  set buftype=nofile
+  setl filetype=feed.vim.buffer
+  setl buftype=nofile
+  setl noshowcmd noshowmode
+  nnoremap <buffer> q :call ExitWritingPrompt()<CR>
   file 'feed.vim.buffer'
 
   " output
   for url in g:feedvim_urls
-
-    " title
-    call s:write("")
-    call s:write("# ".s:get_title(url))
+    " " title
+    call s:write("Choose your writing prompt...")
+    " call s:write("#  ".s:get_title(url))
     call s:write("")
 
     " item
     for item in webapi#feed#parseURL(url)
-      "call s:write("* ".item.title.' - '.item.link)
-      call s:write("* ".item.title)
+      call s:write("* ".item.title.' - '.item.link)
+      " call s:write("* ".item.title)
       let s:links[ ''.line('$').'' ] = item.link
+      call s:write("")
     endfor
   endfor
 endfunction
 
+function! CreateWritingPrompt()
+  " change buffer
+  call FeedvimOpenBuffer()
+  Limelight
+  let g:wpbuff = bufnr('feed.vim.buffer')
+  nnoremap <buffer><silent> q :call ExitWritingPrompt()<CR>
+endfunction
+
+function! ExitWritingPrompt()
+    if bufexists(g:wpbuff)
+      execute "bdelete " . g:wpbuff
+      Limelight!
+    endif
+  let g:wpbuff = -1
+endfunction
+
 command! Feedvim call FeedvimOpenBuffer()
+command! WritingPrompt call CreateWritingPrompt()
+command! WritingPromptExit call ExitWritingPrompt()

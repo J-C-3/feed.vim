@@ -1,7 +1,7 @@
 " requirements: webapi-vim, open-browser.vim
 
 let s:links = {'0':'hoge'}
-"let g:feedvim_urls = [ 'http://togetter.com/rss/hot', 'http://blog.livedoor.jp/dqnplus/index.rdf', 'http://blog.livedoor.jp/ts1209/index.rdf']
+let g:feedvim_urls = [ 'http://reddit.com/r/WritingPrompts/new/.rss?sort=new' ]
 
 function! FeedvimOpenLink()
   let s:url = s:links[ line('.') ]

@@ -55,7 +55,7 @@ function! FeedvimOpenBuffer()
       let height = g:numPosts
     endif
     let config = {'relative':'editor',
-          \ 'col':(rootWinWidth/4)-(width/2),
+          \ 'col':(rootWinWidth/3)-(width/2),
           \ 'row':(rootWinHeight/2)-(height/2),
           \ 'width':width,
           \ 'height':height}

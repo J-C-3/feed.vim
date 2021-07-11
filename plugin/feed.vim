@@ -46,11 +46,17 @@ function! FeedvimOpenBuffer()
     call nvim_buf_set_name(b,'writingPrompt.buffer')
   endif
   if exists('*nvim_open_win')
-    let width = 50
-    let height = 25
+    let rootWinWidth = nvim_win_get_width(0)
+    let rootWinHeight = nvim_win_get_height(0)
+    let width = rootWinWidth/4
+    if g:numPosts > rootWinHeight - 10
+      let height = rootWinHeight - 10
+    else
+      let height = g:numPosts
+    endif
     let config = {'relative':'editor',
-          \ 'col':(nvim_win_get_width(0)/4)-(width/2),
-          \ 'row':(nvim_win_get_height(0)/2)-(height/2),
+          \ 'col':(rootWinWidth/4)-(width/2),
+          \ 'row':(rootWinHeight/2)-(height/2),
           \ 'width':width,
           \ 'height':height}
     " change buffer
@@ -98,8 +104,8 @@ function! FeedvimOpenBuffer()
 endfunction
 
 function! s:displayText(title) abort
-  let width = 50
-  let height = (strlen(a:title)*4/width)+1
+  let width = nvim_win_get_width(g:wpWin)
+  let height = (strlen(a:title)/width)+2
   let bufName = 'titleBuff'
   let b = bufnr(bufName)
   if b == -1
@@ -113,7 +119,7 @@ function! s:displayText(title) abort
   let config = {'relative':'editor',
         \ 'width': width,
         \ 'height':height,
-        \ 'row': parentWin[0]- (height/4) - 3,
+        \ 'row': parentWin[0],
         \ 'col': parentWin[1] + nvim_win_get_width(g:wpWin)}
   " change buffer
   let g:titleWin = nvim_open_win(b, 0, config)
